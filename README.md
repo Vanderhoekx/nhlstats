@@ -11,6 +11,8 @@ json v2.0.9
 
 csv v1.0
 
+must generate the teams before the player/goalie rosters
+
 currently 4 datasets in wideform from the nhl undocumented api
 the program itself is quite messy and i will be cleaning it up as i go, right now its in a mess around to do it stage :P
 
