@@ -21,7 +21,6 @@ the position variable is to seperate goalies from other player statistics, any o
 'G' will generate the goalie statistics
 
 currently 4 datasets in wideform from the nhl undocumented api
-the program itself is quite messy and i will be cleaning it up as i go, right now its in a mess around to do it stage :P
 
 will be adding more in the future as well as visualizations
 
