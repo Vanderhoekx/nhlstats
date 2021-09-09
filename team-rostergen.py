@@ -27,7 +27,7 @@ class NhlGenerator:
         nhlteams.raise_for_status()
         nhl_response = json.loads(nhlteams.content)
 
-        main_dir = os.path.isdir('nhldatasets1')
+        main_dir = os.path.isdir('nhldatasets')
         
         if not main_dir:
             os.makedirs('nhldatasets')
