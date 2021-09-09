@@ -34,16 +34,25 @@ class NhlGenerator:
             os.makedirs('nhldatasets/players')
             print('Creating Directories... ')
 
-        with open('nhldatasets/nhlteams.json', 'w') as teamids:
-            json.dump(nhl_response, teamids, indent = 4)
+            with open('nhldatasets/nhlteams.json', 'w') as teamids:
+                json.dump(nhl_response, teamids, indent = 4)
         
-        for idx in range(len(nhl_response['teams'])):
-            team_id = nhl_response['teams'][idx]['id']
-            team_name = nhl_response['teams'][idx]['name']    
+            for idx in range(len(nhl_response['teams'])):
+                team_id = nhl_response['teams'][idx]['id']
+                team_name = nhl_response['teams'][idx]['name']    
     
-            self.team_id_name.setdefault(team_id, team_name)
+                self.team_id_name.setdefault(team_id, team_name)
 
-        self.generate_teams(self.team_id_name)
+            self.generate_teams(self.team_id_name)
+        
+        else:
+            for idx in range(len(nhl_response['teams'])):
+                team_id = nhl_response['teams'][idx]['id']
+                team_name = nhl_response['teams'][idx]['name']    
+    
+                self.team_id_name.setdefault(team_id, team_name)
+
+            self.generate_players(self.team_id_name)
     
     def generate_teams(self, teams_dict):
         for key, value in teams_dict.items():
