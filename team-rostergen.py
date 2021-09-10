@@ -125,7 +125,7 @@ class NhlGenerator:
                 player_df = pd.DataFrame(player_stats, index = [0])
         
                 for idx in range(len(player_stat_response['stats'][0]['splits'])):
-                    file_exists = os.path.isfile('nhldatasets/calgaryplayers/careergoalieregseason.csv')
+                    file_exists = os.path.isfile('nhldatasets/players/careergoalieregseason.csv')
                     player_stats = player_stat_response['stats'][0]['splits'][idx]['stat']
                     player_df['fullName'] = key
         
@@ -147,7 +147,7 @@ class NhlGenerator:
                 player_df = pd.DataFrame(player_stats, index = [0])
         
                 for idx in range(len(player_stat_response['stats'][0]['splits'])):
-                    file_exists = os.path.isfile('nhldatasets/calgaryplayers/careerplayoffseason.csv')
+                    file_exists = os.path.isfile('nhldatasets/players/careerplayoffseason.csv')
                     player_stats = player_stat_response['stats'][0]['splits'][idx]['stat']
                     player_df['fullName'] = key
         
@@ -169,7 +169,7 @@ class NhlGenerator:
                 player_df = pd.DataFrame(player_stats, index = [0])
         
                 for idx in range(len(player_stat_response['stats'][0]['splits'])):
-                    file_exists = os.path.isfile('nhldatasets/calgaryplayers/careerregseason.csv')
+                    file_exists = os.path.isfile('nhldatasets/players/careerregseason.csv')
                     player_stats = player_stat_response['stats'][0]['splits'][idx]['stat']
                     player_df['fullName'] = key
         
@@ -182,6 +182,6 @@ class NhlGenerator:
             print('Invalid Option')
 
 if __name__ == '__main__':
-    start_gen = NhlGenerator('a', 'playoffs')
+    start_gen = NhlGenerator('p', 'regular')
     start_gen.team_request()
     
