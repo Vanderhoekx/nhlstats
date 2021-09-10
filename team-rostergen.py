@@ -8,7 +8,6 @@
 
 #event is to seperate regular season stats from playoff stats choices are 'playoffs' and 'regular'
 
-
 import requests
 import json
 import pandas as pd
@@ -21,12 +20,14 @@ class NhlGenerator:
         self.player_links = {}
         self.position = position
         self.event = event
-
+    
+    #Creates json with NHL teams and the team info
     def team_request(self):
         nhlteams = requests.get('https://statsapi.web.nhl.com/api/v1/teams')
         nhlteams.raise_for_status()
         nhl_response = json.loads(nhlteams.content)
 
+        #check if directory exists
         main_dir = os.path.isdir('nhldatasets')
         
         if not main_dir:
@@ -54,6 +55,7 @@ class NhlGenerator:
 
             self.generate_players(self.team_id_name)
     
+    #Creates a json for each team with the roster list and some info about the player.
     def generate_teams(self, teams_dict):
         for key, value in teams_dict.items():
             roster_req = requests.get('https://statsapi.web.nhl.com/api/v1/teams/{}/roster'.format(key))
@@ -64,6 +66,7 @@ class NhlGenerator:
 
         self.generate_players(teams_dict)
 
+    #Creates a single csv based on position and event variables of career statistics of all players/goalies
     def generate_players(self, teams_dict):
         id_list = list(teams_dict.keys())
         for idx in id_list:
@@ -100,14 +103,14 @@ class NhlGenerator:
                 player_df = pd.DataFrame(player_stats, index = [0])
         
                 for idx in range(len(player_stat_response['stats'][0]['splits'])):
-                    file_exists = os.path.isfile('nhldatasets/calgaryplayers/careergoalieplayoffseason.csv')
+                    file_exists = os.path.isfile('nhldatasets/players/careergoalieplayoffseason.csv')
                     player_stats = player_stat_response['stats'][0]['splits'][idx]['stat']
                     player_df['fullName'] = key
         
                 if not file_exists:
-                    player_df.to_csv('nhldatasets/calgaryplayers/careergoalieplayoffseason.csv', index = False)
+                    player_df.to_csv('nhldatasets/players/careergoalieplayoffseason.csv', index = False)
                 else:
-                    player_df.to_csv('nhldatasets/calgaryplayers/careergoalieplayoffseason.csv', index = False, mode = 'a', header = False)
+                    player_df.to_csv('nhldatasets/players/careergoalieplayoffseason.csv', index = False, mode = 'a', header = False)
         
         elif self.event == 'regular' and self.position == 'G':
             for key, value in self.player_links.items():
@@ -127,9 +130,9 @@ class NhlGenerator:
                     player_df['fullName'] = key
         
                 if not file_exists:
-                    player_df.to_csv('nhldatasets/calgaryplayers/careergoalieregseason.csv', index = False)
+                    player_df.to_csv('nhldatasets/players/careergoalieregseason.csv', index = False)
                 else:
-                    player_df.to_csv('nhldatasets/calgaryplayers/careergoalieregseason.csv', index = False, mode = 'a', header = False)
+                    player_df.to_csv('nhldatasets/players/careergoalieregseason.csv', index = False, mode = 'a', header = False)
         
         elif self.event == 'playoffs' and self.position != 'G':
             for key, value in self.player_links.items():
@@ -149,9 +152,9 @@ class NhlGenerator:
                     player_df['fullName'] = key
         
                 if not file_exists:
-                    player_df.to_csv('nhldatasets/calgaryplayers/careerplayoffseason.csv', index = False)
+                    player_df.to_csv('nhldatasets/players/careerplayoffseason.csv', index = False)
                 else:
-                    player_df.to_csv('nhldatasets/calgaryplayers/careerplayoffseason.csv', index = False, mode = 'a', header = False)
+                    player_df.to_csv('nhldatasets/players/careerplayoffseason.csv', index = False, mode = 'a', header = False)
         
         elif self.event == 'regular' and self.position != 'G':
             for key, value in self.player_links.items():
@@ -171,14 +174,14 @@ class NhlGenerator:
                     player_df['fullName'] = key
         
                 if not file_exists:
-                    player_df.to_csv('nhldatasets/calgaryplayers/careerregseason.csv', index = False)
+                    player_df.to_csv('nhldatasets/players/careerregseason.csv', index = False)
                 else:
-                    player_df.to_csv('nhldatasets/calgaryplayers/careerregseason.csv', index = False, mode = 'a', header = False)
+                    player_df.to_csv('nhldatasets/players/careerregseason.csv', index = False, mode = 'a', header = False)
 
         else:
             print('Invalid Option')
 
 if __name__ == '__main__':
-    start_gen = NhlGenerator('G', 'regular')
+    start_gen = NhlGenerator('a', 'playoffs')
     start_gen.team_request()
     
