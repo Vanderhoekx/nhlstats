@@ -36,8 +36,9 @@ class NhlGenerator:
             print('Creating Directories... ')
 
             with open('nhldatasets/nhlteams.json', 'w') as teamids:
+                print('Creating Team Json files... ')
                 json.dump(nhl_response, teamids, indent = 4)
-        
+                
             for idx in range(len(nhl_response['teams'])):
                 team_id = nhl_response['teams'][idx]['id']
                 team_name = nhl_response['teams'][idx]['name']    
@@ -91,6 +92,7 @@ class NhlGenerator:
                 self.player_links.setdefault(player_name, player_link)
         
         if self.event == 'playoffs' and self.position == 'G':
+            print('Generating goalie career playoff stats... ')
             for key, value in self.player_links.items():
                 player_stat_req = requests.get('https://statsapi.web.nhl.com/{}/stats?stats=careerPlayoffs'.format(value))
                 player_stat_req.raise_for_status()
@@ -113,6 +115,7 @@ class NhlGenerator:
                     player_df.to_csv('nhldatasets/players/careergoalieplayoffseason.csv', index = False, mode = 'a', header = False)
         
         elif self.event == 'regular' and self.position == 'G':
+            print('Generating goalie career regular season stats... ')
             for key, value in self.player_links.items():
                 player_stat_req = requests.get('https://statsapi.web.nhl.com/{}/stats?stats=careerRegularSeason'.format(value))
                 player_stat_req.raise_for_status()
@@ -135,6 +138,7 @@ class NhlGenerator:
                     player_df.to_csv('nhldatasets/players/careergoalieregseason.csv', index = False, mode = 'a', header = False)
         
         elif self.event == 'playoffs' and self.position != 'G':
+            print('Generating player career playoff stats... ')
             for key, value in self.player_links.items():
                 player_stat_req = requests.get('https://statsapi.web.nhl.com/{}/stats?stats=careerPlayoffs'.format(value))
                 player_stat_req.raise_for_status()
@@ -157,6 +161,7 @@ class NhlGenerator:
                     player_df.to_csv('nhldatasets/players/careerplayoffseason.csv', index = False, mode = 'a', header = False)
         
         elif self.event == 'regular' and self.position != 'G':
+            print('Generating player career regular season stats... ')
             for key, value in self.player_links.items():
                 player_stat_req = requests.get('https://statsapi.web.nhl.com/{}/stats?stats=careerRegularSeason'.format(value))
                 player_stat_req.raise_for_status()
@@ -180,8 +185,8 @@ class NhlGenerator:
 
         else:
             print('Invalid Option')
-
+        print('Finished generating datasets')
 if __name__ == '__main__':
-    start_gen = NhlGenerator('p', 'regular')
+    start_gen = NhlGenerator('G', 'playoffs')
     start_gen.team_request()
     
