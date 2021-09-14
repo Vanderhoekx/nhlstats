@@ -35,7 +35,7 @@ team_response = json.loads(team_request.content)
 team_ids = []
 
 #create connection, database and cursor to work
-connection = sql.connect(r'Sql\databases\nhlstats.db')
+connection = sql.connect(r'Sql\databases\nhlstats.db') #where databse will be saved
 curr = connection.cursor()
 
 #create divisions table
