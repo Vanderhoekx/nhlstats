@@ -12,8 +12,7 @@ json v2.0.9
 csv v1.0
 
 2021-09-14: Added file to create SQL database that includes players table, divisions table, teams table and venues table
-
-all tables are assigned relations and have endpoints for more info included
+  all tables are assigned relations and have endpoints for more info included
 
 
 Generates team list, all the teams w/ roster(minimal info) into seperate json files
