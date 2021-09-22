@@ -16,18 +16,3 @@ csv v1.0
   
   added player regular season career stats table, includes time on ice, shots, goals, assists, points etc..
 
-
-Generates team list, all the teams w/ roster(minimal info) into seperate json files
-
-generates career statistics, will be adding year by year in the future.
-
-the event variable is to seperate regular season from the playoff statistics, choices are 'regular', 'playoffs'
-
-the position variable is to seperate goalies from other player statistics, any option other than 'G' will generate the players while
-'G' will generate the goalie statistics
-
-currently 4 datasets in wideform from the nhl undocumented api
-
-will be adding more in the future as well as visualizations
-
-and lastly incorporate it all into a webpage
