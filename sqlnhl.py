@@ -42,7 +42,6 @@ def career_reg_season_player(player_api_call, player_id):
     #index error is caused by new players on roster who have no stats currently
     try:
         for stat in player_api_call['stats']:
-            print(stat['splits'][0]['stat'])
             curr.execute('INSERT INTO careerregplayers VALUES({}, "{}", {}, {}, {}, {}, {}, {})'.format(
                 player_id,
                 stat['splits'][0]['stat']['timeOnIce'],
@@ -154,7 +153,6 @@ if len(tables_list) < 1:
     #loop through player endpoints and retrieve more detailed stats
     idx = 0
     while idx < len(player_details):
-        
         player_reg_stats = requests.get('https://statsapi.web.nhl.com/{}/stats?stats=careerRegularSeason'.format(''.join(player_details[idx])))
         player_reg_stats.raise_for_status()
         
