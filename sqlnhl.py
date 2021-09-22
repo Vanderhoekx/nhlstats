@@ -27,6 +27,7 @@ def populate_team(roster, team_id):
     return player_ids
 
 def career_reg_season_player(player_api_call, player_id):
+    #create career regular season stats table for players that aren't goalies
     curr.execute('''CREATE TABLE IF NOT EXISTS careerregplayers (
         player_id integer,
         time_on_ice time,
@@ -37,6 +38,8 @@ def career_reg_season_player(player_api_call, player_id):
         hits integer,
         plusminus integer,
         FOREIGN KEY(player_id) REFERENCES players(player_id))''')
+    
+    #index error is caused by new players on roster who have no stats currently
     try:
         for stat in player_api_call['stats']:
             print(stat['splits'][0]['stat'])
@@ -69,6 +72,7 @@ player_ids = []
 connection = sql.connect(r'Sql\databases\nhlstats.db')
 curr = connection.cursor()
 
+#checks if tables exist and if they do, skips populating the tables with more values
 tables_list = curr.execute('''SELECT name FROM sqlite_master WHERE type = "table" AND name = "venues"''').fetchall()
 if len(tables_list) < 1:
 
@@ -143,9 +147,11 @@ if len(tables_list) < 1:
         roster_response = json.loads(roster_request.content)
         populate_team(roster_response, team_ids[idx])
         idx += 1
-
+    
+    #creates a list of player endpoints
     player_details = curr.execute('''SELECT player_endpoint FROM players WHERE position NOT LIKE "G"''').fetchall()
-
+    
+    #loop through player endpoints and retrieve more detailed stats
     idx = 0
     while idx < len(player_details):
         
