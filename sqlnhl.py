@@ -55,7 +55,35 @@ def career_reg_season_player(player_api_call, player_id):
     except IndexError:
         pass
     connection.commit()
-        
+
+def career_reg_season_goalie(player_api_call, player_id):
+    #create career reglar season stats table for goalies
+    curr.execute('''CREATE TABLE IF NOT EXISTS careerreggoalies (
+        player_id integer,
+        time_on_ice time,
+        wins integer,
+        losses integer,
+        shutouts integer,
+        games integer,
+        saves integer,
+        goals_against_average float,
+        FOREIGN KEY(player_id) REFERENCES players(player_id))''')
+    try:
+        for stat in player_api_call['stats']:
+            curr.execute('INSERT INTO careerreggoalies VALUES({}, "{}", {}, {}, {}, {}, {}, {})'.format(
+                player_id,
+                stat['splits'][0]['stat']['timeOnIce'],
+                stat['splits'][0]['stat']['wins'],
+                stat['splits'][0]['stat']['losses'],
+                stat['splits'][0]['stat']['shutouts'],
+                stat['splits'][0]['stat']['games'],
+                stat['splits'][0]['stat']['saves'],
+                stat['splits'][0]['stat']['goalAgainstAverage']
+            ))
+    except IndexError:
+        pass
+    connection.commit()
+
 #send request for api response
 team_request = requests.get('https://statsapi.web.nhl.com/api/v1/teams')
 team_request.raise_for_status()
@@ -71,8 +99,13 @@ player_ids = []
 connection = sql.connect(r'Sql\databases\nhlstats.db')
 curr = connection.cursor()
 
+complete_tables_list = [('divisions',), ('teams',), ('venues',), ('players',), ('careerregplayers',), ('careerreggoalies',)]
 #checks if tables exist and if they do, skips populating the tables with more values
-tables_list = curr.execute('''SELECT name FROM sqlite_master WHERE type = "table" AND name = "venues"''').fetchall()
+tables_list = curr.execute('''SELECT name FROM sqlite_master WHERE type = "table"''').fetchall()
+# if tables_list == complete_tables_list:
+#     pass
+# else:
+
 if len(tables_list) < 1:
 
 #create divisions table
@@ -158,4 +191,17 @@ if len(tables_list) < 1:
         
         player_response = json.loads(player_reg_stats.content)
         career_reg_season_player(player_response, player_ids[idx])
+        idx += 1
+
+    #create list of goalie endpoints
+    goalie_details = curr.execute('''SELECT player_endpoint FROM players WHERE position LIKE "G"''').fetchall()
+
+    #loop through goalie endpoints and retrieve more detailed stats
+    idx = 0
+    while idx < len(goalie_details):
+        goalie_reg_stats = requests.get('https://statsapi.web.nhl.com/{}/stats?stats=careerRegularSeason'.format(''.join(goalie_details[idx])))
+        goalie_reg_stats.raise_for_status()
+
+        goalie_response = json.loads(goalie_reg_stats.content)
+        career_reg_season_goalie(goalie_response, player_ids[idx])
         idx += 1
