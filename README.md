@@ -13,5 +13,5 @@ json v2.0.9
   
   added player regular season career stats table, includes time on ice, shots, goals, assists, points etc..
   
-  added goalie regular season career stats table, includes time on ice, saves, games, goals against average
+  added goalie regular season career stats table, includes time on ice, saves, games, goals against average etc...
 
