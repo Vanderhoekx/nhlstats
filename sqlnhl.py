@@ -11,7 +11,7 @@ def populate_team(roster, team_id):
         full_name text, 
         position text, 
         player_endpoint text,
-        FOREIGN KEY(team_id) REFERENCES teams(team_id))''')
+        PRIMARY KEY(player_id))''')
     
     #insert values into table
     for id in roster['roster']:
@@ -109,15 +109,14 @@ tables_list = curr.execute('''SELECT name FROM sqlite_master WHERE type = "table
 if len(tables_list) < 1:
 
 #create divisions table
-    curr.execute('''CREATE TABLE IF NOT EXISTS divisions (
-        div_id integer,
+    curr.execute('''CREATE TABLE divisions (
+        div_id integer PRIMARY KEY,
         div_name text,
         div_abbr text,
         div_endpoint text,
         conf_id integer,
         conf_name text,
-        conf_endpoint text
-    )''')
+        conf_endpoint text)''')
 
     #create teams table
     curr.execute('''CREATE TABLE IF NOT EXISTS teams (
@@ -127,7 +126,7 @@ if len(tables_list) < 1:
         team_name text,
         team_endpoint text,
         team_website text,
-        FOREIGN KEY(div_id) REFERENCES divisions(div_id))''')
+        PRIMARY KEY(team_id))''')
 
     #create venues table
     curr.execute('''CREATE TABLE IF NOT EXISTS venues (
@@ -140,7 +139,7 @@ if len(tables_list) < 1:
 #loop through api response and insert values into tables
 
     for id in range(len(team_response['teams'])):
-        curr.execute('INSERT INTO divisions VALUES ({}, "{}", "{}", "{}", {}, "{}", "{}")'.format(
+        curr.execute('INSERT OR IGNORE INTO divisions VALUES ({}, "{}", "{}", "{}", {}, "{}", "{}")'.format(
             team_response['teams'][id]['division']['id'],
             team_response['teams'][id]['division']['name'],
             team_response['teams'][id]['division']['abbreviation'],
